@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bright English — демо-сайт школы</title>
+  <meta name="description" content="Демо-сайт вымышленной школы английского: так ИИ-администратор работает на сайте учебного центра.">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/bright-english-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;1,800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/demo/demo.css">
+</head>
+<body>
+  <script>document.documentElement.classList.add("js");</script>
+  <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="demo-bar">Это демо-сайт вымышленной школы. Чат справа внизу — так ИИ-администратор работает на сайте центра. <a href="/">О сервисе →</a></div>
+
+  <div class="wrap">
+    <header class="top">
+      <a class="logo" href="/demo/"><img src="/assets/bright-english-mark.svg" alt="" width="44" height="44">Bright English</a>
+      <nav aria-label="Разделы">
+        <a href="#courses">Курсы</a>
+        <a href="#trial">Пробный урок</a>
+        <a href="#contacts">Контакты</a>
+        <button class="btn btn-outline" type="button" onclick="window.AIAdmin && AIAdmin.open('booking')">Записаться</button>
+      </nav>
+    </header>
+
+    <main>
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Школа английского · Астана и онлайн</div>
+          <h1 class="h">Заговорите на английском <span class="mark">уже в первый месяц</span></h1>
+          <p>Группы до 8 человек для детей, подростков и взрослых. В Астане и онлайн.</p>
+          <div class="hero-actions">
+            <button class="btn btn-coral" type="button" onclick="window.AIAdmin && AIAdmin.open('booking')">
+              Записаться на пробный урок
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+            <a class="link" href="#courses">Курсы и цены</a>
+          </div>
+          <div class="hero-note">Бесплатно · 45 минут · Без обязательств</div>
+        </div>
+
+        <div class="photo"><div class="photo-tilt" id="tilt"><div class="photo-float">
+          <svg class="sparkle-2" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg>
+          <svg class="sparkle-3" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg>
+          <svg class="sparkle" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg>
+          <div class="photo-frame">
+            <picture>
+              <source srcset="/demo/student.webp" type="image/webp">
+              <img src="/demo/student.jpg" alt="Студентка смеётся на уроке английского" width="1122" height="930">
+            </picture>
+          </div>
+          <div class="trial-card">
+            <h3>Пробный урок бесплатно</h3>
+            <ul>
+              <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#F2554A" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>45 минут с преподавателем</li>
+              <li><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="14" width="4.5" height="7" rx="1.5" fill="#12A99B"/><rect x="9.75" y="9" width="4.5" height="12" rx="1.5" fill="#12A99B"/><rect x="16.5" y="3" width="4.5" height="18" rx="1.5" fill="#12A99B"/></svg>Тест на уровень</li>
+              <li><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="#F2554A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="8" r="2.5"/><circle cx="12" cy="7" r="2.8"/><circle cx="18" cy="8" r="2.5"/><path d="M2 18a4 4 0 0 1 7-2.6M8 18a4 4 0 0 1 8 0M15 15.4a4 4 0 0 1 7 2.6"/></svg>Подбор группы</li>
+            </ul>
+          </div>
+        </div></div></div>
+      </div>
+
+      <div class="facts">
+        <div class="fact reveal" style="--i: 0"><span class="circle" style="background: var(--coral-soft)"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#F2554A" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="8" r="2.5"/><circle cx="12" cy="7" r="2.8"/><circle cx="18" cy="8" r="2.5"/><path d="M2 18a4 4 0 0 1 7-2.6M8 18a4 4 0 0 1 8 0M15 15.4a4 4 0 0 1 7 2.6"/></svg></span><div><b>до 8 учеников</b><span>в одной группе</span></div></div>
+        <div class="fact reveal" style="--i: 1"><span class="circle" style="background: var(--sky-soft)"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#2AA9D6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5h6a3 3 0 0 1 3 3V20a2 2 0 0 0-2-2H3z"/><path d="M21 5.5h-6a3 3 0 0 0-3 3V20a2 2 0 0 1 2-2h7z"/></svg></span><div><b>Cambridge</b><span>учебники входят в абонемент</span></div></div>
+        <div class="fact reveal" style="--i: 2"><span class="circle" style="background: var(--amber-soft)"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#F2A516" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="9" r="6"/><path d="M12 6.5l.9 1.8 2 .3-1.4 1.4.3 2-1.8-.9-1.8.9.3-2-1.4-1.4 2-.3z" fill="#F2A516"/><path d="M8.5 14 7 21l5-2.5 5 2.5-1.5-7"/></svg></span><div><b>IELTS</b><span>пробный тест каждую субботу</span></div></div>
+        <div class="fact reveal" style="--i: 3"><span class="circle" style="background: var(--teal-soft)"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#12A99B" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M7 14.5h3"/></svg></span><div><b>Kaspi</b><span>удобная оплата</span></div></div>
+      </div>
+
+      <section id="courses">
+        <div class="sec-head reveal">
+          <h2 class="h">Английский для вашей жизни</h2>
+          <p>Выберите свой курс — первый урок бесплатно</p>
+        </div>
+        <div class="courses">
+          <article class="course reveal" style="--i: 0">
+            <span class="badge" style="background: var(--coral-soft); color: #B8352B">7–12 лет</span>
+            <h3>Английский для детей</h3>
+            <p>Группа до 8 человек, 3 раза в неделю по 60 минут. Игры, песни и много разговора.</p>
+            <div class="price">35 000 ₸ <small>/ мес</small></div>
+            <button class="btn btn-outline" type="button" onclick="window.AIAdmin && AIAdmin.open('booking')">Записаться</button>
+          </article>
+          <article class="course reveal" style="--i: 1">
+            <span class="badge" style="background: var(--teal-soft); color: #0B7368">13–17 лет</span>
+            <h3>Для подростков</h3>
+            <p>Группа до 8 человек, 3 раза в неделю по 60 минут. Грамматика, разговор, подготовка к экзаменам.</p>
+            <div class="price">38 000 ₸ <small>/ мес</small></div>
+            <button class="btn btn-outline" type="button" onclick="window.AIAdmin && AIAdmin.open('booking')">Записаться</button>
+          </article>
+          <article class="course reveal" style="--i: 2">
+            <span class="badge" style="background: var(--amber-soft); color: #8A5A00">Взрослые</span>
+            <h3>Разговорный английский</h3>
+            <p>Группа до 6 человек, 2 раза в неделю по 90 минут. Говорим с первого занятия.</p>
+            <div class="price">40 000 ₸ <small>/ мес</small></div>
+            <button class="btn btn-outline" type="button" onclick="window.AIAdmin && AIAdmin.open('booking')">Записаться</button>
+          </article>
+          <article class="course reveal" style="--i: 3">
+            <span class="badge" style="background: var(--sky-soft); color: #136C8C">от 15 лет</span>
+            <h3>Подготовка к IELTS</h3>
+            <p>Группа до 6 человек, 3 раза в неделю, пробный тест каждую субботу.</p>
+            <div class="price">55 000 ₸ <small>/ мес</small></div>
+            <button class="btn btn-outline" type="button" onclick="window.AIAdmin && AIAdmin.open('booking')">Записаться</button>
+          </article>
+        </div>
+      </section>
+
+      <section id="formats">
+        <div class="sec-head reveal">
+          <h2 class="h">В Астане или онлайн</h2>
+          <p>Программа и цена одинаковые — выбирайте, как удобнее</p>
+        </div>
+        <div class="formats">
+          <article class="format reveal" style="--i: 0">
+            <div class="format-photo">
+              <picture><source srcset="/demo/astana.webp" type="image/webp"><img src="/demo/astana.jpg" alt="Студентка на уроке в классе с видом на Астану" width="1000" height="687" loading="lazy"></picture>
+              <span class="format-tag" style="background: var(--coral)">В классе</span>
+            </div>
+            <div class="format-body">
+              <h3>Светлые классы в центре Астаны</h3>
+              <p>Группы до 8 человек, живое общение и учебники Cambridge в абонементе.</p>
+              <ul><li>пр. Мангилик Ел, 00</li><li>Пн–Пт 10:00–20:00</li></ul>
+            </div>
+          </article>
+          <article class="format reveal" style="--i: 1">
+            <div class="format-photo">
+              <picture><source srcset="/demo/online.webp" type="image/webp"><img src="/demo/online.jpg" alt="Студентка на онлайн-уроке за ноутбуком" width="1000" height="687" loading="lazy"></picture>
+              <span class="format-tag" style="background: var(--teal)">Онлайн</span>
+            </div>
+            <div class="format-body">
+              <h3>Уроки из дома, в то же время</h3>
+              <p>Та же программа и преподаватели. Нужны только ноутбук или телефон и наушники.</p>
+              <ul><li>Цена та же</li><li>Из любого города</li></ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="trial">
+        <div class="sec-head reveal">
+          <h2 class="h">Как проходит пробный урок</h2>
+          <p>45 минут, бесплатно и без обязательств</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal" style="--i: 0"><div class="num" style="background: var(--coral)">1</div><h3>Знакомство</h3><p>Преподаватель расскажет, как устроены занятия, и ответит на вопросы.</p></div>
+          <div class="step reveal" style="--i: 1"><div class="num" style="background: var(--teal)">2</div><h3>Тест на уровень</h3><p>Короткий устный и письменный тест — без стресса и оценок.</p></div>
+          <div class="step reveal" style="--i: 2"><div class="num" style="background: var(--amber)">3</div><h3>Подбор группы</h3><p>Подберём группу по уровню и удобному расписанию.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="cta reveal">
+          <div class="cta-icon" aria-hidden="true"><span class="cta-bubble"><i></i><i></i><i></i></span></div>
+          <div>
+            <h2 class="h">Остались вопросы?</h2>
+            <p>Спросите ИИ-администратора — ответит сразу и запишет на пробный в любое время, даже ночью.</p>
+          </div>
+          <button class="btn btn-white" type="button" onclick="window.AIAdmin && AIAdmin.open()">Открыть чат</button>
+        </div>
+      </section>
+
+      <section id="contacts">
+        <div class="sec-head reveal"><h2 class="h">Контакты</h2></div>
+        <div class="contacts">
+          <div class="contact reveal" style="--i: 0"><span class="circle" style="background: var(--coral-soft)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#F2554A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><div><small>Адрес</small><b>пр. Мангилик Ел, 00, офис 1</b><br><a href="https://2gis.kz/search/%D0%90%D1%81%D1%82%D0%B0%D0%BD%D0%B0%2C%20%D0%BF%D1%80.%20%D0%9C%D0%B0%D0%BD%D0%B3%D0%B8%D0%BB%D0%B8%D0%BA%20%D0%95%D0%BB" target="_blank" rel="noopener">Как добраться →</a></div></div>
+          <div class="contact reveal" style="--i: 1"><span class="circle" style="background: var(--teal-soft)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#12A99B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><small>График</small><b>Пн–Пт 10:00–20:00<br>Сб 10:00–15:00</b></div></div>
+          <div class="contact reveal" style="--i: 2"><span class="circle" style="background: var(--amber-soft)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#F2A516" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v7a3 3 0 0 1-3 3H8.5L4 19.5z"/></svg></span><div><small>Вопросы</small><b>Чат отвечает сразу, в любое время</b><br><a href="#" onclick="window.AIAdmin && AIAdmin.open(); return false;">Открыть чат →</a></div></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>Bright English — вымышленная школа для демонстрации сервиса. Адрес и телефон ненастоящие, фото сгенерировано.</footer>
+  </div>
+
+  <script>
+    (function () {
+      // появление блоков при прокрутке
+      var items = document.querySelectorAll(".reveal");
+      // после появления убираем служебные классы, чтобы работали эффекты при наведении
+      function show(el) { el.classList.add("in"); setTimeout(function () { el.classList.remove("reveal", "in"); }, 1600); }
+      if (!("IntersectionObserver" in window)) { items.forEach(show); }
+      else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+        }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+        items.forEach(function (el) { io.observe(el); });
+      }
+      // фото слегка поворачивается за курсором (только мышь, не тач)
+      var tilt = document.getElementById("tilt");
+      var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      if (tilt && !calm) {
+        var hero = tilt.closest(".hero");
+        hero.addEventListener("pointermove", function (e) {
+          var r = tilt.getBoundingClientRect();
+          var x = (e.clientX - r.left - r.width / 2) / r.width, y = (e.clientY - r.top - r.height / 2) / r.height;
+          tilt.style.transform = "perspective(900px) rotateY(" + (x * 5).toFixed(2) + "deg) rotateX(" + (-y * 5).toFixed(2) + "deg)";
+        });
+        hero.addEventListener("pointerleave", function () { tilt.style.transform = ""; });
+      }
+    })();
+  </script>
+  <script src="/widget.js" data-center="brightway" async></script>
+</body>
+</html>

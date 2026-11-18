@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ИИ-администратор для учебных центров</title>
+  <meta name="description" content="Запись на пробный — даже после закрытия. ИИ отвечает родителям в WhatsApp и на сайте на русском и казахском, сохраняет заявки и уведомляет команду.">
+  <meta property="og:title" content="ИИ-администратор для учебных центров">
+  <meta property="og:description" content="Запись на пробный — даже после закрытия. Помощник в WhatsApp и на сайте, заявки в кабинете и уведомления в Telegram.">
+  <meta name="theme-color" content="#FBF7FB">
+  <link rel="icon" href="/assets/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,700;0,800;1,800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/base.css">
+  <style>
+    html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .h { font-family: var(--font-h); font-weight: 800; letter-spacing: -.02em; line-height: 1.08; margin: 0; }
+    .circle { flex: none; border-radius: 50%; display: grid; place-items: center; }
+
+    /* шапка */
+    .top { position: sticky; top: 12px; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 14px; padding: 9px 10px 9px 16px; border-radius: 999px; background: rgba(255, 255, 255, .74); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 8px 28px rgba(40, 32, 80, .08); animation: rise .6s ease both; }
+    .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); font: 800 19px/1 var(--font-h); letter-spacing: -.02em; white-space: nowrap; }
+    .logo img { width: 38px; height: 38px; }
+    .top nav { display: flex; gap: 30px; font-weight: 700; font-size: 15px; }
+    .top nav a { position: relative; color: var(--ink); text-decoration: none; }
+    .top nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: var(--coral); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
+    .top nav a:hover::after { transform: scaleX(1); }
+    .top-actions { display: flex; gap: 8px; align-items: center; }
+
+    /* первый экран */
+    .hero { display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, .94fr); gap: 36px; align-items: center; padding: 52px 0 36px; }
+    .eyebrow { font: 800 13.5px/1.3 var(--font-h); letter-spacing: .08em; text-transform: uppercase; color: var(--ink); margin-bottom: 18px; animation: rise .7s .1s var(--ease) both; }
+    .hero h1 { font-size: clamp(32px, 4vw, 52px); line-height: 1.14; animation: rise .8s .2s var(--ease) both; }
+    .hero h1 span { white-space: normal; }
+    .hero-channels { margin: -14px 0 28px; color: var(--ink); font-size: 16px; font-weight: 700; animation: rise .8s .4s var(--ease) both; }
+    .hero .mark { animation: marker .7s .95s cubic-bezier(.3, .8, .3, 1) both; }
+    .hero .lead { font-size: 18.5px; line-height: 1.55; color: var(--ink-2); font-weight: 600; margin: 24px 0 30px; max-width: 520px; animation: rise .8s .35s var(--ease) both; }
+    .hero-cta { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; animation: rise .8s .5s var(--ease) both; }
+    .hero-cta .btn { min-height: 54px; padding: 0 28px; font-size: 16px; }
+    .link { font-weight: 700; color: var(--ink); text-decoration: none; padding-bottom: 4px; background: linear-gradient(var(--coral), var(--coral)) no-repeat left 100% / 100% 2px; transition: color .2s; }
+    .link:hover { color: var(--accent); }
+    .hero-note { margin-top: 18px; font-size: 14px; color: var(--ink-3); font-weight: 600; max-width: 460px; animation: rise .8s .62s var(--ease) both; }
+
+    .art { position: relative; animation: pop .9s .3s cubic-bezier(.2, .8, .2, 1) both; }
+    .art-tilt { transition: transform .35s ease-out; will-change: transform; }
+    .art-float { position: relative; animation: float 7s 1.4s ease-in-out infinite; }
+    .art-bg { position: absolute; inset: 9% 7% 6% 9%; padding: 6px; border-radius: 42% 58% 52% 48% / 50% 44% 56% 50%; background: linear-gradient(135deg, #8EE3F0, #FCE36C 45%, #F8B4D2); background-size: 300% 300%; animation: frame-glow 8s linear infinite, morph 14s ease-in-out infinite alternate; box-shadow: 0 24px 60px rgba(242, 85, 74, .14); }
+    .art-bg::after { content: ""; display: block; width: 100%; height: 100%; border-radius: inherit; background: rgba(255, 255, 255, .86); }
+    @keyframes frame-glow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes morph { to { border-radius: 54% 46% 44% 56% / 46% 56% 44% 54%; } }
+    .art img { position: relative; width: 100%; filter: drop-shadow(0 18px 26px rgba(20, 32, 74, .14)); }
+    .sp { position: absolute; color: var(--coral); animation: twinkle 3.2s ease-in-out infinite; }
+    .sp.s1 { right: 2%; top: 2%; width: 44px; height: 44px; }
+    .sp.s2 { left: 4%; top: 12%; width: 22px; height: 22px; color: var(--amber); animation-duration: 2.6s; animation-delay: .8s; }
+    .sp.s3 { right: 10%; bottom: 0; width: 26px; height: 26px; color: var(--teal); animation-duration: 3.8s; animation-delay: .3s; }
+
+    /* факты */
+    .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding: 8px 0 12px; }
+    .fact { display: flex; align-items: center; gap: 16px; background: var(--surface); border-radius: 22px; padding: 20px; box-shadow: var(--shadow); transition: transform .25s, box-shadow .25s; }
+    .fact:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .fact:hover .circle svg { animation: wiggle .6s ease; }
+    .fact .circle { width: 58px; height: 58px; }
+    .fact b { display: block; font: 800 17px/1.25 var(--font-h); }
+    .fact div > span { display: block; font-size: 14.5px; color: var(--ink-2); line-height: 1.35; margin-top: 3px; font-weight: 600; }
+
+    /* разделы */
+    section { padding: 92px 0 0; }
+    .sec-head { margin-bottom: 34px; max-width: 780px; }
+    .sec-head h2 { font-size: clamp(29px, 3.5vw, 44px); }
+    .sec-head p { margin: 12px 0 0; font-size: 18.5px; color: var(--ink-2); font-weight: 600; }
+
+    .cards-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .tile { background: var(--surface); border-radius: 26px; padding: 28px; box-shadow: var(--shadow); transition: transform .25s, box-shadow .25s; }
+    .tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .tile:hover .circle svg { animation: wiggle .6s ease; }
+    .tile .circle { width: 56px; height: 56px; margin-bottom: 18px; }
+    .tile h3 { font-size: 20px; line-height: 1.25; margin: 0 0 8px; }
+    .tile p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+
+    /* как работает */
+    .how { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 56px; align-items: center; }
+    .steps { display: grid; gap: 18px; position: relative; }
+    .steps::before { content: ""; position: absolute; left: 53px; top: 40px; bottom: 40px; border-left: 2px dashed #DCD3E6; }
+    .step { position: relative; display: grid; grid-template-columns: 52px 1fr; gap: 20px; align-items: start; background: var(--surface); border-radius: 26px; padding: 26px 28px; box-shadow: var(--shadow); transition: transform .25s; }
+    .step:hover { transform: translateX(6px); }
+    .step:hover .num { animation: wiggle .6s ease; }
+    .num { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font: 800 23px/1 var(--font-h); color: #fff; }
+    .step h3 { font-size: 20px; margin: 2px 0 6px; }
+    .step p { margin: 0; color: var(--ink-2); font-size: 15.5px; }
+
+    .phone-wrap { position: relative; margin-bottom: 30px; }
+    .phone { position: relative; background: var(--surface); border-radius: 34px; box-shadow: 0 26px 70px rgba(40, 32, 80, .18); overflow: hidden; border: 6px solid #fff; outline: 1px solid var(--line); }
+    .phone-head { display: flex; gap: 12px; align-items: center; padding: 15px 18px; color: #fff; background: linear-gradient(120deg, #F7614F, #E8456A); }
+    .phone-head .av { width: 40px; height: 40px; border-radius: 13px; background: #fff; display: grid; place-items: center; flex: none; }
+    .phone-head .av img { width: 28px; height: 28px; }
+    .phone-head b { display: block; font: 800 15.5px/1.2 var(--font-h); }
+    .phone-head small { display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; opacity: .95; }
+    .phone-head small i { width: 8px; height: 8px; border-radius: 50%; background: #7CF2C3; box-shadow: 0 0 0 0 rgba(124, 242, 195, .7); animation: ping 2s infinite; }
+    @keyframes ping { 70% { box-shadow: 0 0 0 8px rgba(124, 242, 195, 0); } 100% { box-shadow: 0 0 0 0 rgba(124, 242, 195, 0); } }
+    .phone-body { background: #FAF6FB; padding: 16px 14px 56px; display: grid; gap: 9px; }
+    .b { max-width: 86%; padding: 10px 14px; border-radius: 18px; font-size: 14.5px; line-height: 1.45; font-weight: 600; }
+    .b.in { background: #fff; box-shadow: 0 2px 10px rgba(40, 32, 80, .06); border-bottom-left-radius: 6px; justify-self: start; }
+    .b.out { background: linear-gradient(120deg, #F05A4C, var(--accent)); color: #fff; justify-self: end; border-bottom-right-radius: 6px; }
+    .b.time { justify-self: center; background: none; color: var(--ink-3); font-size: 12px; padding: 0; }
+    .b.ok { background: var(--teal-soft); color: #0A4F49; justify-self: start; border-bottom-left-radius: 6px; display: flex; gap: 10px; align-items: flex-start; }
+    .b.ok svg { flex: none; margin-top: 1px; }
+    .b-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .b-chips span { background: #fff; color: var(--accent); box-shadow: inset 0 0 0 1.5px #F6C4BF; border-radius: 999px; padding: 7px 12px; font-size: 13px; font-weight: 800; transition: background .25s, color .25s, transform .25s; }
+    .b-chips span.pick { background: var(--accent); color: #fff; box-shadow: none; transform: scale(1.06); }
+    .slot { position: relative; display: grid; }
+    .b.dots { position: absolute; left: 0; top: 0; display: flex; gap: 5px; padding: 13px 14px; background: #fff; box-shadow: 0 2px 10px rgba(40, 32, 80, .06); border-bottom-left-radius: 6px; }
+    .b.dots i { width: 7px; height: 7px; border-radius: 50%; background: var(--coral); animation: typing 1.2s ease-in-out infinite; }
+    .b.dots i:nth-child(2) { animation-delay: .15s; }
+    .b.dots i:nth-child(3) { animation-delay: .3s; }
+    .notify { position: absolute; right: -34px; bottom: -30px; width: 250px; display: flex; gap: 12px; align-items: center; background: #fff; border-radius: 20px; padding: 14px 16px; box-shadow: 0 18px 50px rgba(20, 32, 74, .2); }
+    .notify .circle { width: 42px; height: 42px; background: var(--sky-soft); }
+    .notify b { display: block; font: 800 14.5px/1.2 var(--font-h); }
+    .notify span { display: block; font-size: 12.5px; color: var(--ink-2); font-weight: 600; margin-top: 2px; }
+    /* переписка проигрывается скриптом; без скрипта видна целиком */
+    .js .play [data-s], .js .play .notify { opacity: 0; transform: translateY(12px) scale(.96); transition: opacity .4s var(--ease), transform .45s cubic-bezier(.3, 1.4, .5, 1); }
+    .js .play [data-s].on, .js .play .notify.on { opacity: 1; transform: none; }
+    .js .play .dots { opacity: 0; transition: opacity .2s; }
+    .js .play .dots.on { opacity: 1; }
+    .dots { opacity: 0; }
+
+    /* кабинет */
+    .features { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); gap: 56px; align-items: center; }
+    .flist { display: grid; gap: 18px; margin: 0; padding: 0; list-style: none; }
+    .flist li { display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start; }
+    .flist .circle { width: 44px; height: 44px; border-radius: 14px; }
+    .flist b { display: block; font: 800 17px/1.3 var(--font-h); }
+    .flist span { color: var(--ink-2); font-size: 15px; }
+    .dash { position: relative; background: var(--surface); border-radius: 30px; padding: 20px; display: grid; gap: 12px; box-shadow: 0 26px 70px rgba(40, 32, 80, .14); }
+    .dash-top { display: flex; align-items: center; justify-content: space-between; padding: 2px 4px 6px; }
+    .dash-top b { font: 800 17px/1 var(--font-h); }
+    .dash-top span { font-size: 12.5px; font-weight: 700; color: var(--ink-3); background: var(--surface-2); border-radius: 999px; padding: 6px 12px; }
+    .dash-k { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .dash-k div { background: var(--surface-2); border-radius: 18px; padding: 14px 16px; }
+    .dash-k div.acc { background: linear-gradient(120deg, #F7614F, #F2557A 60%, #C25BD8); background-size: 200% 200%; animation: flow 8s ease-in-out infinite alternate; color: #fff; }
+    .dash-k small { display: block; font-size: 12.5px; font-weight: 700; opacity: .8; }
+    .dash-k strong { font: 800 30px/1.2 var(--font-h); letter-spacing: -.02em; }
+    .dash-row { background: #fff; box-shadow: inset 0 0 0 1.5px var(--line); border-radius: 16px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 14px; font-weight: 600; }
+    .pill { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: var(--sky-soft); color: #0E5F80; white-space: nowrap; }
+    .pill.w { background: var(--amber-soft); color: var(--amber-ink); }
+    .pill.g { background: var(--teal-soft); color: #0A5C54; }
+    .dash-cap { font-size: 12.5px; color: var(--ink-3); text-align: center; font-weight: 600; }
+
+    /* цены */
+    .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: stretch; }
+    .plan { position: relative; background: var(--surface); border-radius: 28px; padding: 30px 28px 28px; display: flex; flex-direction: column; gap: 16px; box-shadow: var(--shadow); transition: transform .25s, box-shadow .25s; }
+    .plan:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+    .plan.main { background: linear-gradient(#fff, #fff) padding-box, linear-gradient(135deg, #F7614F, #F2557A 55%, #C25BD8) border-box; border: 3px solid transparent; box-shadow: 0 24px 60px rgba(242, 85, 74, .18); }
+    .plan-badge { position: absolute; top: -15px; left: 26px; background: linear-gradient(90deg, #F7614F, #E8456A); color: #fff; font: 800 12.5px/1 var(--font-h); padding: 9px 14px; border-radius: 999px; box-shadow: 0 8px 18px rgba(222, 68, 57, .3); }
+    .plan h3 { margin: 0; font-size: 21px; }
+    .plan-intro { margin: 0; color: var(--ink-2); font-size: 15px; }
+    .plan .btn { padding: 12px 16px; text-align: center; min-height: 54px; }
+    .plan-note { margin: 22px 0 0; color: var(--ink-2); font-size: 15px; }
+    .section-cta { margin-top: 30px; }
+    .setup-copy { max-width: 900px; }
+    .setup-copy p { font-size: 17px; }
+    .setup-copy p + p { margin-top: 16px; }
+    .price { font: 800 34px/1.1 var(--font-h); letter-spacing: -.02em; }
+    .price small { display: block; font: 600 14px/1.4 var(--font); color: var(--ink-2); letter-spacing: 0; margin-top: 6px; }
+    .plan ul { margin: 0; padding: 0; list-style: none; color: var(--ink-2); display: grid; gap: 10px; flex: 1; align-content: start; font-size: 15px; }
+    .plan li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
+    .plan li::before { content: ""; width: 22px; height: 22px; border-radius: 50%; margin-top: 1px; background: var(--teal-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E9488' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.5 12.5l3.5 3.5 7.5-8'/%3E%3C/svg%3E") center / 13px no-repeat; }
+    .pilot { margin-top: 22px; display: flex; gap: 14px; align-items: center; background: var(--amber-soft); border-radius: 20px; padding: 16px 20px; font-weight: 700; color: #5C3A05; }
+    .pilot svg { flex: none; color: var(--amber); animation: twinkle 3s ease-in-out infinite; }
+
+    /* вопросы */
+    .faq-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.5fr); gap: 48px; align-items: start; }
+    .faq-side { position: sticky; top: 110px; }
+    .faq-side p { margin: 12px 0 22px; font-size: 18px; color: var(--ink-2); font-weight: 600; }
+    .faq { display: grid; gap: 12px; }
+    .faq details { background: var(--surface); border-radius: 20px; box-shadow: var(--shadow); transition: box-shadow .25s; }
+    .faq details:hover { box-shadow: var(--shadow-lg); }
+    .faq summary { font: 800 17px/1.35 var(--font-h); cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 22px; border-radius: 20px; }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: ""; flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--accent-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D63D32' stroke-width='2.8' stroke-linecap='round'%3E%3Cpath d='M12 6v12M6 12h12'/%3E%3C/svg%3E") center / 16px no-repeat; transition: transform .3s var(--ease), background-color .2s; }
+    .faq details[open] summary::after { transform: rotate(135deg); background-color: var(--yellow); }
+    .faq p { margin: 0; padding: 0 22px 22px; color: var(--ink-2); max-width: 720px; }
+    .faq details[open] p { animation: rise .4s var(--ease) both; }
+
+    /* финальный блок */
+    .final { position: relative; overflow: hidden; border-radius: 34px; padding: 56px; color: #fff; display: flex; justify-content: space-between; align-items: center; gap: 32px; background: linear-gradient(120deg, #F7614F 0%, #F2557A 55%, #C25BD8 100%); background-size: 200% 200%; animation: flow 10s ease-in-out infinite alternate; }
+    .final::before, .final::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255, 255, 255, .13); pointer-events: none; }
+    .final::before { width: 260px; height: 260px; right: -70px; top: -110px; animation: float 9s ease-in-out infinite; }
+    .final::after { width: 150px; height: 150px; left: 38%; bottom: -80px; animation: float 7s 1s ease-in-out infinite; }
+    .final > * { position: relative; }
+    .final h2 { font-size: clamp(27px, 3.2vw, 40px); }
+    .final p { margin: 10px 0 0; font-size: 18px; font-weight: 600; color: rgba(255, 255, 255, .94); max-width: 560px; }
+    .final-cta { display: flex; flex-direction: column; gap: 12px; flex: none; }
+    .final > div:first-child { min-width: 0; }
+    .final .btn { min-height: 54px; }
+    .final .btn.glass { background: rgba(255, 255, 255, .16); color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .6); }
+    .final .btn.glass:hover { background: rgba(255, 255, 255, .26); }
+
+    footer { padding: 56px 0 110px; font-size: 14px; color: var(--ink-3); font-weight: 600; display: flex; flex-wrap: wrap; gap: 6px 18px; }
+    footer a { color: var(--ink-2); }
+
+    /* значки и номера «вылетают» при появлении */
+    .js .reveal .circle, .js .reveal .num { transform: scale(.5); opacity: 0; transition: transform .6s cubic-bezier(.3, 1.6, .5, 1), opacity .4s; transition-delay: calc(var(--i, 0) * 90ms + 180ms); }
+    .js .reveal.in .circle, .js .reveal.in .num { transform: none; opacity: 1; }
+
+    @media (max-width: 1080px) {
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .top nav { display: none; }
+      .how, .features, .faq-grid { grid-template-columns: 1fr; gap: 40px; }
+      .faq-grid { gap: 26px; } .faq-side { position: static; }
+      .phone-wrap { max-width: 420px; margin: 0 auto; width: 100%; }
+      .notify { right: -10px; }
+    }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 28px; padding-top: 36px; }
+      .art { max-width: 560px; margin: 0 auto; width: 100%; }
+      .cards-3, .plans { grid-template-columns: 1fr; }
+      .final { flex-direction: column; align-items: flex-start; padding: 36px 28px; }
+    }
+    @media (max-width: 560px) {
+      .wrap { padding: 0 16px; }
+      .top { padding: 7px 8px 7px 12px; }
+      .logo { font-size: 15px; gap: 8px; } .logo img { width: 34px; height: 34px; }
+      .hero .lead { font-size: 17px; }
+      .hero-cta .btn { width: 100%; }
+      .facts { grid-template-columns: 1fr; gap: 12px; }
+      section { padding-top: 68px; }
+      .step { grid-template-columns: 46px 1fr; gap: 14px; padding: 20px; }
+      .num { width: 46px; height: 46px; font-size: 20px; }
+      .steps::before { left: 42px; }
+      .step:hover { transform: none; }
+      .phone-wrap { margin-bottom: 0; }
+      .phone-body { padding-bottom: 20px; }
+      .notify { position: relative; right: auto; bottom: auto; width: auto; margin: 14px 8px 0; }
+      .dash { padding: 14px; border-radius: 24px; }
+      .dash-row { font-size: 13px; }
+      .faq summary { font-size: 16px; padding: 16px 16px 16px 18px; }
+      .faq p { padding: 0 18px 18px; }
+      .final-cta, .final-cta .btn { width: 100%; }
+    }
+    @media (max-width: 420px) {
+      .top .login { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <script>document.documentElement.classList.add("js");</script>
+  <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+
+  <div class="wrap">
+    <header class="top">
+      <a class="logo" href="/" aria-label="ИИ-администратор — главная"><img src="/assets/logo-mark.svg" alt="" width="38" height="38">ИИ-администратор</a>
+      <nav aria-label="Главное меню"><a href="#how">Как работает</a><a href="#cabinet">Кабинет</a><a href="#prices">Цены</a><a href="#faq">Вопросы</a></nav>
+      <div class="top-actions"><a class="btn ghost small login" href="/cabinet/">Войти</a><a class="btn small" href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B8%D1%82%D1%8C%20%D0%98%D0%98-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%20%D0%B4%D0%BB%D1%8F%20%D0%BD%D0%B0%D1%88%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0." target="_blank" rel="noopener">WhatsApp</a></div>
+    </header>
+
+    <main>
+      <div class="hero">
+        <div>
+          <div class="eyebrow">ИИ-администратор для учебных центров</div>
+          <h1 class="h">Запись на пробный — <span class="mark">даже после закрытия</span></h1>
+          <p class="lead">Родители пишут вечером, в выходные и во время занятий. ИИ отвечает на вопросы о курсах, ценах и расписании, помогает записаться на пробное занятие и передаёт заявку вашей команде.</p>
+          <p class="hero-channels">В WhatsApp и чате сайта. На русском и казахском.</p>
+          <div class="hero-cta">
+            <a class="btn shine" href="/demo/">Попробовать в демо
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+            <a class="link" href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%98%D0%98-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0%20%D0%B4%D0%BB%D1%8F%20%D0%BD%D0%B0%D1%88%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0." target="_blank" rel="noopener">Обсудить подключение</a>
+          </div>
+          <p class="hero-note">Задайте вопрос, выберите занятие и посмотрите, как запись появляется в кабинете. Демо работает на примере вымышленного учебного центра.</p>
+        </div>
+
+        <div class="art"><div class="art-tilt" id="tilt"><div class="art-float">
+          <div class="art-bg"></div>
+          <picture>
+            <source srcset="/assets/robot-700.webp 700w, /assets/robot.webp 1050w" sizes="(max-width: 900px) 92vw, 600px" type="image/webp">
+            <img src="/assets/robot.webp" alt="ИИ-администратор: улыбающийся робот в академической шапочке с планшетом. Вокруг карточки «На связи 24/7», «Запись создана», «Новая заявка»" width="1050" height="788" decoding="async" fetchpriority="high">
+          </picture>
+          <svg class="sp s1" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg>
+          <svg class="sp s2" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg>
+          <svg class="sp s3" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg>
+        </div></div></div>
+      </div>
+
+      <div class="facts" aria-label="Преимущества">
+        <div class="fact reveal" style="--i: 0"><span class="circle" style="background: var(--amber-soft)"><svg viewBox="0 0 24 24" width="30" height="30" fill="#F2A516" aria-hidden="true"><path d="M13.5 2 5 13.5h5.5L9.5 22 19 10h-5.8z"/></svg></span><div><b>Ответы круглосуточно</b><span>Вечером и в выходные</span></div></div>
+        <div class="fact reveal" style="--i: 1"><span class="circle" style="background: var(--accent-soft)"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#F2554A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.5 10h17M8.5 15l2.3 2.3L15.5 13"/></svg></span><div><b>Запись на удобное время</b><span>Из доступных занятий</span></div></div>
+        <div class="fact reveal" style="--i: 2"><span class="circle" style="background: var(--sky-soft)"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#1E8FBB" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12c0 4-3.6 7-8 7-1 0-2-.2-2.900-.4L4.500 20l1-3.600C4.600 15.200 4 13.700 4 12c0-4 3.600-7 8-7s8 3 8 7z"/><path d="M9 11.500h.01M12 11.500h.01M15 11.500h.01"/></svg></span><div><b>Русский и казахский</b><span>На языке клиента</span></div></div>
+        <div class="fact reveal" style="--i: 3"><span class="circle" style="background: var(--teal-soft)"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#0E9488" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h4"/></svg></span><div><b>Уведомления о заявках</b><span>В Telegram и кабинете</span></div></div>
+      </div>
+
+      <section id="why">
+        <div class="sec-head reveal">
+          <h2 class="h">Когда администратор занят, <span class="mark">общение продолжается</span></h2>
+          <p>Встречать учеников, отвечать на звонки и вести переписки одновременно сложно. ИИ берёт на себя типовые вопросы и оформление записи.</p>
+        </div>
+        <div class="cards-3">
+          <div class="tile reveal" style="--i: 0"><span class="circle" style="background: var(--violet-soft)"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#7357D9" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.500A8 8 0 0 1 9.500 4a8 8 0 1 0 10.500 10.500z"/><path d="M16 4v3M14.500 5.500h3"/></svg></span><h3>Обращения после рабочего дня</h3><p>Родителю не нужно ждать до утра, чтобы узнать стоимость, уточнить расписание и выбрать пробное занятие.</p></div>
+          <div class="tile reveal" style="--i: 1"><span class="circle" style="background: var(--amber-soft)"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#D98F0A" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3l3 3-3 3"/><path d="M4 11V9a3 3 0 0 1 3-3h13"/><path d="M7 21l-3-3 3-3"/><path d="M20 13v2a3 3 0 0 1-3 3H4"/></svg></span><h3>Повторяющиеся вопросы</h3><p>Какие есть курсы? С какого возраста принимаете? Где проходят занятия? ИИ объясняет условия, которые вы указали для своего центра.</p></div>
+          <div class="tile reveal" style="--i: 2"><span class="circle" style="background: var(--sky-soft)"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#1E8FBB" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9a5 5 0 0 0-5-5H8a5 5 0 0 0-5 5c0 1.400.6 2.700 1.500 3.600L4 15l2.700-.6"/><path d="M21 15a5 5 0 0 0-5-5h-1a5 5 0 0 0 0 10h1c.5 0 1-.100 1.400-.200L20 20.500l-.500-2.200c.900-.900 1.500-2 1.500-3.300z"/></svg></span><h3>Записи, которые трудно найти в переписке</h3><p>Контакты, выбранный курс и время занятия сохраняются в кабинете. Администратору проще увидеть новые заявки и связаться с клиентами.</p></div>
+        </div>
+      </section>
+
+      <section id="how">
+        <div class="sec-head reveal">
+          <h2 class="h">От первого вопроса до записи на занятие</h2>
+        </div>
+        <div class="how">
+          <div class="steps">
+            <div class="step reveal" style="--i: 0"><div class="num" style="background: var(--coral)">1</div><div><h3>Родитель открывает чат</h3><p>Пишет в WhatsApp, на сайте или переходит в чат по ссылке из Instagram, рекламы либо QR-кода.</p></div></div>
+            <div class="step reveal" style="--i: 1"><div class="num" style="background: var(--amber)">2</div><div><h3>Получает ответы</h3><p>ИИ рассказывает о занятиях на основе информации вашего центра. Вопросы о скидках, жалобах и других нестандартных ситуациях передаёт сотруднику.</p></div></div>
+            <div class="step reveal" style="--i: 2"><div class="num" style="background: var(--teal)">3</div><div><h3>Выбирает пробное занятие</h3><p>Родитель видит доступное время, выбирает подходящий вариант и оставляет контакт для связи.</p></div></div>
+            <div class="step reveal" style="--i: 3"><div class="num" style="background: var(--violet)">4</div><div><h3>Администратор получает заявку</h3><p>Уведомление приходит в Telegram, а запись сохраняется в кабинете. После занятия сотрудник может отметить посещение и покупку курса.</p></div></div>
+          </div>
+
+          <div class="phone-wrap reveal" id="chatDemo" aria-label="Пример переписки с ИИ-администратором">
+            <div class="phone">
+              <div class="phone-head"><span class="av"><img src="/assets/logo-mark.svg" alt="" width="28" height="28"></span><div><b>Ваш учебный центр</b><small><i></i>Администратор онлайн</small></div></div>
+              <div class="phone-body">
+                <div class="b time" data-s>Суббота, 22:47</div>
+                <div class="b out" data-s>Здравствуйте! Сколько стоит английский для ребёнка 8 лет?</div>
+                <div class="slot"><div class="b dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="b in" data-s>Группа для детей 7–12 лет — 35 000 ₸ в месяц, 3 раза в неделю. Пробный урок бесплатный. Записать вас?</div></div>
+                <div class="b-chips" data-s><span>Вт 16:00</span><span data-pick>Чт 18:30</span><span>Сб 11:00</span></div>
+                <div class="b out" data-s>Чт 18:30</div>
+                <div class="slot"><div class="b dots" aria-hidden="true"><i></i><i></i><i></i></div><div class="b ok" data-s><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#0E9488" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.500l4.500 4.500L19 7.500"/></svg><span><b>Вы записаны!</b> Четверг, 18:30. Ждём вас на пробном уроке.</span></div></div>
+              </div>
+            </div>
+            <div class="notify"><span class="circle"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1E8FBB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.500 7 2.500 7h-17S6 15 6 9z"/><path d="M10 19.500a2.200 2.200 0 0 0 4 0"/></svg></span><div><b>Новая заявка</b><span>Айгерим · ребёнок 8 лет · Чт 18:30</span></div></div>
+          </div>
+        </div>
+        <div class="section-cta reveal"><a class="btn ghost" href="/demo/">Пройти этот путь в демо</a></div>
+      </section>
+
+      <section id="cabinet">
+        <div class="features">
+          <div>
+            <div class="sec-head reveal">
+              <h2 class="h">Заявки и пробные занятия под контролем</h2>
+              <p>Откройте кабинет, чтобы увидеть новые обращения, ближайшие записи и результаты работы с клиентами.</p>
+            </div>
+            <ul class="flist">
+              <li class="reveal" style="--i: 0"><span class="circle" style="background: var(--accent-soft)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#F2554A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.500" y="4" width="17" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h4"/></svg></span><div><b>Контакты и детали заявки</b><span>Имя, телефон, курс и время занятия собраны вместе. Из карточки можно перейти в WhatsApp и написать родителю.</span></div></li>
+              <li class="reveal" style="--i: 1"><span class="circle" style="background: var(--violet-soft)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#7357D9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.500 5h17l-6.500 7.500V19l-4 1.500v-8z"/></svg></span><div><b>Путь от обращения до покупки</b><span>Отмечайте, кто записался, кто пришёл на пробное занятие и кто купил курс. Смотрите, на каком этапе находится каждая заявка.</span></div></li>
+              <li class="reveal" style="--i: 2"><span class="circle" style="background: var(--teal-soft)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#0E9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.500" y="5" width="17" height="15" rx="3"/><path d="M8 3v4M16 3v4M3.500 10h17"/></svg></span><div><b>Расписание пробных занятий</b><span>Ближайшие записи на неделю помогают администратору и преподавателям подготовиться к новым ученикам.</span></div></li>
+              <li class="reveal" style="--i: 3"><span class="circle" style="background: var(--amber-soft)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#D98F0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg></span><div><b>Изменения без программиста</b><span>Обновляйте стоимость, расписание и информацию о курсах в кабинете — помощник будет использовать актуальные данные.</span></div></li>
+              <li class="reveal" style="--i: 4"><span class="circle" style="background: var(--sky-soft)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1E8FBB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4 3 11l6 2.500L11.500 20l3.500-4.500 4 2.500z"/><path d="M9 13.500 21 4"/></svg></span><div><b>Уведомления в Telegram</b><span>Получайте новые заявки и меняйте их статусы кнопками. Утренняя сводка покажет обращения за ночь и записи на сегодня.</span></div></li>
+              <li class="reveal" style="--i: 5"><span class="circle" style="background: var(--accent-soft)"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#F2554A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1.500"/><rect x="14" y="4" width="6" height="6" rx="1.500"/><rect x="4" y="14" width="6" height="6" rx="1.500"/><path d="M14 14h2.500v2.500M20 14v6h-6v-1.500M17.500 17.500h.01"/></svg></span><div><b>Выгрузка и QR-код</b><span>Скачивайте заявки в Excel. Разместите QR-код на стойке администратора, чтобы родители могли открыть чат со своего телефона.</span></div></li>
+            </ul>
+          </div>
+          <div class="dash reveal" id="dash" aria-label="Пример кабинета">
+            <div class="dash-top"><b>Сводка</b><span>30 дней</span></div>
+            <div class="dash-k">
+              <div><small>Заявок за 30 дней</small><strong data-count="64">64</strong></div>
+              <div><small>Записались на пробный</small><strong data-count="38">38</strong></div>
+              <div><small>Купили курс</small><strong data-count="17">17</strong></div>
+              <div class="acc"><small>Заявок вне рабочего времени</small><strong data-count="23">23</strong></div>
+            </div>
+            <div class="dash-row"><span><b>Айгерим</b> · ребёнок 7–12 · Вт 16:00</span><span class="pill">записан</span></div>
+            <div class="dash-row"><span><b>Ерлан</b> · просит перезвонить</span><span class="pill w">новая</span></div>
+            <div class="dash-row"><span><b>Динара</b> · IELTS · Сб 11:00</span><span class="pill g">купил</span></div>
+            <div class="dash-cap">Пример интерфейса. Показатели приведены для иллюстрации.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="prices">
+        <div class="sec-head reveal">
+          <h2 class="h">Выберите, с чего начать</h2>
+        </div>
+        <div class="plans">
+          <div class="plan reveal" style="--i: 0">
+            <h3>Разбор обращений</h3>
+            <div class="price">Бесплатно</div>
+            <p class="plan-intro">Посмотрим, как ваш центр отвечает новым клиентам и что можно улучшить в записи на занятия.</p>
+            <ul>
+              <li>Проверим скорость ответа на обращение</li>
+              <li>Разберём путь клиента от первого вопроса до записи</li>
+              <li>Подготовим обзор предложений и рекламы 5–10 конкурентов</li>
+            </ul>
+            <a class="btn ghost" href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B8%D1%82%D1%8C%20%D0%B1%D0%B5%D1%81%D0%BF%D0%BB%D0%B0%D1%82%D0%BD%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B7%D0%B1%D0%BE%D1%80%20%D0%BE%D0%B1%D1%80%D0%B0%D1%89%D0%B5%D0%BD%D0%B8%D0%B9%20%D0%B4%D0%BB%D1%8F%20%D0%BD%D0%B0%D1%88%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0." target="_blank" rel="noopener">Получить бесплатный разбор</a>
+          </div>
+          <div class="plan main reveal" style="--i: 1">
+            <h3>Автоматизация записи</h3>
+            <div class="price">100 000 ₸<small>настройка и запуск<br>Далее — 30 000 ₸ в месяц</small></div>
+            <p class="plan-intro">Для центра, которому нужен помощник в переписке и удобный учёт заявок.</p>
+            <ul>
+              <li>ИИ-помощник в WhatsApp и на сайте, отдельная ссылка для Instagram и рекламы</li>
+              <li>Настройка ответов по вашим курсам, ценам и расписанию</li>
+              <li>Выбор времени пробного занятия и напоминания</li>
+              <li>Личный кабинет с заявками, статусами и выгрузкой в Excel</li>
+              <li>Уведомления в Telegram и утренняя сводка</li>
+            </ul>
+            <a class="btn shine" href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D1%82%D0%B0%D1%80%D0%B8%D1%84%20%C2%AB%D0%90%D0%B2%D1%82%D0%BE%D0%BC%D0%B0%D1%82%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F%20%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B8%C2%BB%20%D0%B4%D0%BB%D1%8F%20%D0%BD%D0%B0%D1%88%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0." target="_blank" rel="noopener">Обсудить подключение</a>
+          </div>
+          <div class="plan reveal" style="--i: 2">
+            <h3>Сайт и материалы для набора</h3>
+            <div class="price">180 000 ₸<small>настройка и запуск<br>Далее — 50 000 ₸ в месяц</small></div>
+            <p class="plan-intro">Для центра, которому вместе с автоматизацией нужны страница для новых клиентов и рекламные материалы.</p>
+            <ul>
+              <li>Всё из тарифа «Автоматизация записи»</li>
+              <li>Посадочная страница с вашими курсами и переходом к записи</li>
+              <li>4–6 рекламных материалов в месяц</li>
+              <li>Ежемесячный обзор рекламы конкурентов</li>
+            </ul>
+            <a class="btn ghost" href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%20%D1%82%D0%B0%D1%80%D0%B8%D1%84%20%C2%AB%D0%A1%D0%B0%D0%B9%D1%82%20%D0%B8%20%D0%BC%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%B0%D0%BB%D1%8B%20%D0%B4%D0%BB%D1%8F%20%D0%BD%D0%B0%D0%B1%D0%BE%D1%80%D0%B0%C2%BB%20%D0%B4%D0%BB%D1%8F%20%D0%BD%D0%B0%D1%88%D0%B5%D0%B3%D0%BE%20%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0." target="_blank" rel="noopener">Обсудить задачи центра</a>
+          </div>
+        </div>
+        <p class="plan-note reveal">Условия подключения WhatsApp и возможные дополнительные расходы на сообщения обсудим до запуска.</p>
+        <p class="pilot reveal"><svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg><span><strong>Предложение для первых трёх центров:</strong> скидка 50% на запуск в обмен на отзыв и данные о результатах внедрения.</span></p>
+      </section>
+
+      <section id="setup">
+        <div class="sec-head reveal">
+          <h2 class="h">Как проходит подключение</h2>
+        </div>
+        <div class="tile setup-copy reveal">
+          <p>Вы передаёте информацию о курсах, стоимости, расписании и частых вопросах. Мы настраиваем помощника под ваш центр и подключаем выбранные каналы общения.</p>
+          <p>Перед запуском вместе проверяем ответы и запись на занятие. Показываем, как работать с заявками и обновлять информацию. Срок подключения согласуем с учётом выбранных каналов.</p>
+        </div>
+      </section>
+
+      <section id="faq">
+        <div class="faq-grid">
+        <div class="faq-side reveal"><h2 class="h" style="font-size: clamp(29px, 3.5vw, 44px)">Ответы на частые вопросы</h2><p>Не нашли ответ? Напишите — ответим в WhatsApp.</p><a class="btn ghost" href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%92%D0%BE%D0%BF%D1%80%D0%BE%D1%81%20%D0%BF%D1%80%D0%BE%20%D0%98%D0%98-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0." target="_blank" rel="noopener">Задать вопрос</a></div>
+        <div class="faq">
+          <details class="reveal" style="--i: 0"><summary>Подойдёт, если у нас нет сайта?</summary><p>Да. Помощника можно открыть по отдельной ссылке. Разместите её в профиле Instagram, рекламе или QR-коде на стойке администратора.</p></details>
+          <details class="reveal" style="--i: 1"><summary>Он заменит нашего администратора?</summary><p>Он возьмёт на себя типовые вопросы и оформление записи. Ваша команда продолжит проводить занятия, общаться в сложных ситуациях и помогать клиентам принять решение о покупке.</p></details>
+          <details class="reveal" style="--i: 2"><summary>Как помощник узнает наши цены и расписание?</summary><p>Вы указываете информацию о центре в кабинете. На её основе настраиваются ответы. При изменении стоимости, расписания или условий обновите соответствующие данные.</p></details>
+          <details class="reveal" style="--i: 3"><summary>Что происходит со сложными вопросами?</summary><p>Обращения, требующие решения человека, передаются администратору. Например, вопросы о возврате, индивидуальной скидке или жалобе. Перед запуском проверяем типовые диалоги на ваших примерах.</p></details>
+          <details class="reveal" style="--i: 4"><summary>Можно общаться прямо в WhatsApp?</summary><p>Да. Родитель сможет задать вопросы и записаться в WhatsApp. Подключение выполняется через официальный WhatsApp Business API. Требования к номеру, порядок настройки и расходы на сообщения обсудим заранее.</p></details>
+          <details class="reveal" style="--i: 5"><summary>Помощник понимает казахский?</summary><p>Да, он общается на русском и казахском, ориентируясь на язык клиента.</p></details>
+          <details class="reveal" style="--i: 6"><summary>Где сотрудник увидит новую запись?</summary><p>В Telegram придёт уведомление, а данные сохранятся в личном кабинете. Утром можно посмотреть сводку ночных обращений и пробных занятий на сегодня.</p></details>
+          <details class="reveal" style="--i: 7"><summary>Что происходит с данными родителей?</summary><p>Перед записью клиент даёт согласие на обработку имени и телефона. Доступ к кабинету защищён паролем. По запросу клиента заявку можно удалить. Подробности — в <a href="/privacy/">политике обработки данных</a>.</p></details>
+        </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="final reveal">
+          <div>
+            <h2 class="h">Посмотрите, как это будет работать в вашем центре</h2>
+            <p>Откройте демо и попробуйте записаться на занятие глазами родителя. А если хотите обсудить свои курсы, расписание и поток обращений — напишите нам в WhatsApp.</p>
+          </div>
+          <div class="final-cta">
+            <a class="btn white" href="/demo/">Попробовать в демо</a>
+            <a class="btn glass" href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%BE%D0%B1%D1%81%D1%83%D0%B4%D0%B8%D1%82%D1%8C%2C%20%D0%BA%D0%B0%D0%BA%20%D0%98%D0%98-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%20%D0%B1%D1%83%D0%B4%D0%B5%D1%82%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%D1%82%D1%8C%20%D0%B2%20%D0%BD%D0%B0%D1%88%D0%B5%D0%BC%20%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B5." target="_blank" rel="noopener">Обсудить мой центр</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer><span>ИИ-администратор для учебных центров · Астана</span><a href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%92%D0%BE%D0%BF%D1%80%D0%BE%D1%81%20%D0%BF%D1%80%D0%BE%20%D0%98%D0%98-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0." target="_blank" rel="noopener">WhatsApp +7 903 327 44 96</a><a href="/privacy/">Политика обработки данных</a><a href="/cabinet/">Вход в кабинет</a></footer>
+  </div>
+
+  <script>
+    (function () {
+      var calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // появление блоков при прокрутке; после появления служебные классы убираем, чтобы работали эффекты при наведении
+      var items = document.querySelectorAll(".reveal");
+      function show(el) {
+        el.classList.add("in");
+        el.dispatchEvent(new CustomEvent("shown"));
+        setTimeout(function () { el.classList.remove("reveal", "in"); }, 1600);
+      }
+      if (!("IntersectionObserver" in window)) { items.forEach(show); }
+      else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) { if (e.isIntersecting) { show(e.target); io.unobserve(e.target); } });
+        }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+        items.forEach(function (el) { io.observe(el); });
+      }
+
+      // цифры в примере кабинета «набегают»
+      var dash = document.getElementById("dash");
+      if (dash && !calm) dash.addEventListener("shown", function () {
+        dash.querySelectorAll("[data-count]").forEach(function (el) {
+          var to = Number(el.dataset.count), t0 = performance.now();
+          (function tick(now) {
+            var k = Math.min(1, (now - t0) / 1100);
+            el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
+            if (k < 1) requestAnimationFrame(tick);
+          })(t0);
+        });
+      });
+
+      // переписка в телефоне проигрывается по кругу
+      var demo = document.getElementById("chatDemo");
+      if (demo && !calm) {
+        var parts = demo.querySelectorAll("[data-s]"), dots = demo.querySelectorAll(".dots"), pick = demo.querySelector("[data-pick]"), note = demo.querySelector(".notify");
+        var timers = [];
+        var at = function (ms, fn) { timers.push(setTimeout(fn, ms)); };
+        var on = function (el) { return function () { el.classList.add("on"); }; };
+        var off = function (el) { return function () { el.classList.remove("on"); }; };
+        function play() {
+          timers.forEach(clearTimeout); timers = [];
+          parts.forEach(function (p) { p.classList.remove("on"); });
+          dots.forEach(function (d) { d.classList.remove("on"); });
+          pick.classList.remove("pick"); note.classList.remove("on");
+          at(300, on(parts[0]));
+          at(800, on(parts[1]));
+          at(1500, on(dots[0]));
+          at(2900, function () { off(dots[0])(); on(parts[2])(); });
+          at(3500, on(parts[3]));
+          at(4900, function () { pick.classList.add("pick"); });
+          at(5400, on(parts[4]));
+          at(6000, on(dots[1]));
+          at(7100, function () { off(dots[1])(); on(parts[5])(); });
+          at(7900, on(note));
+          at(13500, play);
+        }
+        demo.classList.add("play");
+        demo.addEventListener("shown", function () { setTimeout(play, 500); });
+      }
+
+      // иллюстрация слегка поворачивается за курсором (только мышь)
+      var tilt = document.getElementById("tilt");
+      if (tilt && !calm && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+        var hero = tilt.closest(".hero");
+        hero.addEventListener("pointermove", function (e) {
+          var r = tilt.getBoundingClientRect();
+          var x = (e.clientX - r.left - r.width / 2) / r.width, y = (e.clientY - r.top - r.height / 2) / r.height;
+          tilt.style.transform = "perspective(900px) rotateY(" + (x * 5).toFixed(2) + "deg) rotateX(" + (-y * 5).toFixed(2) + "deg)";
+        });
+        hero.addEventListener("pointerleave", function () { tilt.style.transform = ""; });
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Онлайн-администратор</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/chat/app.css">
+  <style>
+    html, body { margin: 0; height: 100%; background: #fff; }
+    #app { height: 100vh; height: 100dvh; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="/chat/app.js"></script>
+  <script>
+    (function () {
+      var p = new URLSearchParams(location.search);
+      var embed = p.get("embed") === "1"; // старый виджет во фрейме
+      var SOURCES = { qr: "QR-код", ig: "Instagram", wa: "автоответ WhatsApp", ad: "реклама" };
+      var chat = AiAdminChat.mount(document.getElementById("app"), {
+        center: p.get("c") || "brightway",
+        embed: embed,
+        source: (SOURCES[p.get("src")] || p.get("src") || (embed ? "виджет на сайте" : "ссылка на чат")).slice(0, 40),
+        onClose: embed ? function () { parent.postMessage({ type: "ai-admin:close" }, "*"); } : null,
+        onLead: embed ? function (d) { parent.postMessage({ type: "ai-admin:lead", center: d.center, kind: d.kind }, "*"); } : null,
+      });
+      // цвет строки состояния телефона — под шапку центра
+      var t = setInterval(function () {
+        var head = chat.el.querySelector(".aa-head");
+        if (chat.el.dataset.header === "brand") { document.querySelector('meta[name="theme-color"]').content = getComputedStyle(chat.el).getPropertyValue("--aa-head-bg").trim(); clearInterval(t); }
+      }, 300);
+      setTimeout(function () { clearInterval(t); }, 6000);
+    })();
+  </script>
+  <script src="/assets/nl-badge.js" defer></script>
+</body>
+</html>

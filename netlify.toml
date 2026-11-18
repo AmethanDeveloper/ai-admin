@@ -1,0 +1,44 @@
+[build]
+  publish = "public"
+  command = "echo 'Статический сайт, сборка не нужна'"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Чат открывается внутри iframe на сайтах центров — разрешаем встраивание только для него
+[[headers]]
+  for = "/chat/*"
+  [headers.values]
+    Content-Security-Policy = "frame-ancestors *"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/cabinet/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Robots-Tag = "noindex"
+
+[[headers]]
+  for = "/cabinet/sw.js"
+  [headers.values]
+    Cache-Control = "no-cache"
+    Content-Type = "text/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/cabinet/manifest.webmanifest"
+  [headers.values]
+    Content-Type = "application/manifest+json; charset=utf-8"
+
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Robots-Tag = "noindex"

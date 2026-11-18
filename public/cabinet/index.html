@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Кабинет центра — ИИ-администратор</title>
+  <meta name="robots" content="noindex">
+  <link rel="manifest" href="/cabinet/manifest.webmanifest">
+  <meta name="theme-color" content="#FBF7FB">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="ИИ-админ">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="/cabinet/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/cabinet/icons/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/base.css">
+  <link rel="stylesheet" href="/cabinet/cabinet.css">
+</head>
+<body class="cabinet-page">
+  <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+  <!-- Вход -->
+  <section class="login" id="offlineView" hidden>
+    <div class="login-card">
+      <h1>Нет подключения</h1>
+      <p class="muted">Кабинет откроется сам, как только появится интернет.</p>
+      <button class="btn" type="button" id="offlineRetry">Повторить</button>
+    </div>
+  </section>
+
+  <section class="login" id="loginView" hidden>
+    <div class="login-box">
+    <form class="login-card" id="loginForm">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><img src="/assets/logo-mark.svg" alt="" width="32" height="32"></span>ИИ-администратор</a>
+      <h1>Кабинет центра</h1>
+      <p class="muted">Все заявки из чата, записи на пробные уроки и настройки бота.</p>
+      <label class="field"><span>Код центра</span><input class="input" id="loginCenter" autocomplete="username" required placeholder="например, brightway"></label>
+      <label class="field"><span>Пароль</span><input class="input" id="loginPassword" type="password" autocomplete="current-password" required></label>
+      <p class="form-error" id="loginError" role="alert" hidden></p>
+      <button class="btn shine" type="submit" id="loginBtn">Войти</button>
+      <p class="demo-hint" id="demoHint">Демо-доступ: код <b>brightway</b>, пароль <b>demo2026</b> · <button type="button" class="link" id="fillDemo">подставить</button></p>
+    </form>
+    <div class="login-art" aria-hidden="true">
+      <div class="login-art-in">
+        <img src="/assets/robot-700.webp" alt="" width="700" height="525">
+        <svg class="sp s1" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg>
+        <svg class="sp s2" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c.6 6.2 5.8 11.4 12 12-6.2.6-11.4 5.8-12 12-.6-6.2-5.8-11.4-12-12C6.2 11.4 11.4 6.2 12 0z"/></svg>
+      </div>
+      <h2>Заявки приходят,<br><span class="mark">даже когда вы спите</span></h2>
+    </div>
+    </div>
+  </section>
+
+  <!-- Кабинет -->
+  <div class="app" id="appView" hidden>
+    <header class="app-head">
+      <div class="app-head-inner">
+        <a class="brand" href="/" aria-label="ИИ-администратор"><span class="brand-mark" aria-hidden="true"><img src="/assets/logo-mark.svg" alt="" width="36" height="36"></span><span class="brand-text">ИИ-администратор</span></a>
+        <div class="center-name" id="centerName"></div>
+        <button class="btn ghost small" id="logoutBtn" type="button">Выйти</button>
+      </div>
+      <nav class="tabs" id="tabs" aria-label="Разделы кабинета">
+        <a href="/" class="side-brand"><img src="/assets/logo-mark.svg" alt="" width="40" height="40">ИИ-администратор</a>
+        <p class="side-label">Разделы</p>
+        <button type="button" data-tab="overview" class="active">Сводка</button>
+        <button type="button" data-tab="leads">Заявки <span class="badge" id="newBadge" hidden></span></button>
+        <button type="button" data-tab="questions">Вопросы <span class="badge" id="qBadge" hidden></span></button>
+        <button type="button" data-tab="settings">Настройки</button>
+        <button type="button" data-tab="install">Установка</button>
+        <a class="side-help" href="https://wa.me/79033274496?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21%20%D0%92%D0%BE%D0%BF%D1%80%D0%BE%D1%81%20%D0%BF%D1%80%D0%BE%20%D0%98%D0%98-%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%BE%D1%80%D0%B0." target="_blank" rel="noopener"><b>Нужна помощь?</b>Напишите нам в WhatsApp — подскажем и настроим.</a>
+      </nav>
+    </header>
+
+    <main class="app-main">
+      <!-- Сводка -->
+      <section data-view="overview">
+        <div class="view-head">
+          <h2>Сводка</h2>
+          <div class="seg" id="period" role="group" aria-label="Период">
+            <button type="button" data-days="7">7 дней</button>
+            <button type="button" data-days="30" class="active">30 дней</button>
+            <button type="button" data-days="0">Всё время</button>
+          </div>
+        </div>
+        <div class="card follow" id="follow" hidden></div>
+        <div class="card checklist" id="checklist" hidden></div>
+        <div class="kpis" id="kpis"></div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>Воронка</h3>
+            <div id="funnel"></div>
+          </div>
+          <div class="card">
+            <h3>Ближайшие пробные уроки</h3>
+            <div id="upcoming"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Заявки -->
+      <section data-view="leads" hidden>
+        <div class="view-head">
+          <h2>Заявки</h2>
+          <div class="head-actions">
+            <input class="input search" id="search" type="search" placeholder="Имя или телефон">
+            <button class="btn ghost small" id="exportBtn" type="button">Скачать в Excel</button>
+          </div>
+        </div>
+        <div class="filters" id="filters" role="group" aria-label="Фильтр по статусу"></div>
+        <div class="leads" id="leadsList"></div>
+      </section>
+
+      <!-- Вопросы -->
+      <section data-view="questions" hidden>
+        <div class="view-head">
+          <h2>Вопросы из чата</h2>
+          <label class="toggle"><input type="checkbox" id="showAllQ"> Показать все</label>
+        </div>
+        <p class="muted">Здесь вопросы, на которые бот не смог ответить сам. Ответьте клиенту по телефону или добавьте ответ в «Частые вопросы» в настройках — тогда бот будет отвечать сам.</p>
+        <div id="questionsList"></div>
+      </section>
+
+      <!-- Настройки -->
+      <section data-view="settings" hidden>
+        <div class="view-head"><h2>Настройки</h2></div>
+        <form id="settingsForm" class="settings">
+          <fieldset class="card">
+            <legend>Центр</legend>
+            <div class="form-grid">
+              <label class="field"><span>Название</span><input class="input" name="name" required maxlength="80"></label>
+              <label class="field"><span>Город</span><input class="input" name="city" maxlength="60"></label>
+              <label class="field wide"><span>Адрес</span><input class="input" name="address" maxlength="200"></label>
+              <label class="field"><span>График работы</span><input class="input" name="hours" maxlength="200" placeholder="Пн–Пт 10:00–20:00"></label>
+              <label class="field"><span>Телефон</span><input class="input" name="phone" maxlength="40"></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="card brand-set">
+            <legend>Оформление чата</legend>
+            <p class="muted small">Логотип и цвет вашего центра — чат на сайте, по ссылке и QR-коду будет выглядеть как ваш собственный.</p>
+            <div class="brand-grid">
+              <div class="brand-controls">
+                <div class="brand-row">
+                  <div class="logo-tile" id="logoTile" aria-hidden="true"></div>
+                  <div class="brand-logo-actions">
+                    <label class="btn ghost small" for="logoFile">Загрузить логотип</label>
+                    <input id="logoFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden>
+                    <button class="btn ghost small" type="button" id="logoRemove" hidden>Убрать</button>
+                    <div class="muted small" id="logoStatus">PNG, JPG или SVG, лучше квадратный и на прозрачном фоне.</div>
+                  </div>
+                </div>
+                <div class="field">
+                  <span id="colorLabel">Цвет центра</span>
+                  <div class="swatches" id="swatches" role="radiogroup" aria-labelledby="colorLabel"></div>
+                </div>
+                <div class="field">
+                  <span id="headLabel">Шапка чата</span>
+                  <div class="seg" role="radiogroup" aria-labelledby="headLabel">
+                    <label><input type="radio" name="brand.header" value="light"> Светлая</label>
+                    <label><input type="radio" name="brand.header" value="brand"> В цвет центра</label>
+                  </div>
+                </div>
+                <label class="check-line"><input type="checkbox" name="brand.pattern"> Узор британского флага в шапке — для школ английского</label>
+              </div>
+              <div class="brand-preview" aria-label="Предпросмотр чата">
+                <div class="pv" id="brandPreview">
+                  <div class="pv-head">
+                    <svg class="pv-pattern" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d="M0 0L60 30M60 0L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0L60 30M60 0L0 30" stroke="#C8314A" stroke-width="2"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8314A" stroke-width="6"/></svg>
+                    <div class="pv-logo" id="pvLogo"></div>
+                    <div class="pv-names"><b id="pvName">Ваш центр</b><small>Администратор онлайн · отвечает сразу</small></div>
+                  </div>
+                  <div class="pv-body">
+                    <div class="pv-msg">Здравствуйте! Подскажу по курсам и ценам и запишу на пробный урок.</div>
+                    <div class="pv-trial"><span class="pv-pill">Бесплатно</span><b>Пробный урок</b><span class="pv-btn">Выбрать время</span></div>
+                    <div class="pv-user">Курсы и цены</div>
+                  </div>
+                </div>
+                <a class="small" href="#" id="pvOpen" target="_blank" rel="noopener">Открыть чат и посмотреть целиком ↗</a>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="card">
+            <legend>Пробный урок</legend>
+            <div class="form-grid">
+              <label class="field"><span>Длительность, минут</span><input class="input" name="trial.durationMin" type="number" min="10" max="240"></label>
+              <label class="field"><span>Стоимость</span><input class="input" name="trial.price" maxlength="60" placeholder="бесплатно"></label>
+              <label class="field"><span>Мест в одном слоте</span><input class="input" name="trial.capacityPerSlot" type="number" min="1" max="50"></label>
+              <label class="field wide"><span>Что происходит на уроке</span><input class="input" name="trial.whatHappens" maxlength="300"></label>
+            </div>
+            <h4>Время пробных уроков</h4>
+            <p class="muted small">Через запятую, например: 16:00, 18:30. Пустое поле — в этот день пробных нет.</p>
+            <div class="days" id="daysGrid"></div>
+            <label class="field"><span>Кто учится — варианты для выбора, через запятую</span><input class="input" name="studentTypes" maxlength="500"></label>
+          </fieldset>
+
+          <fieldset class="card">
+            <legend>Курсы и цены</legend>
+            <div id="coursesList" class="rows"></div>
+            <button class="btn ghost small" type="button" id="addCourse">+ Добавить курс</button>
+          </fieldset>
+
+          <fieldset class="card">
+            <legend>Частые вопросы</legend>
+            <p class="muted small">Бот отвечает только по этим данным. Чем полнее ответы — тем реже вопросы уходят администратору.</p>
+            <div id="faqList" class="rows"></div>
+            <button class="btn ghost small" type="button" id="addFaq">+ Добавить вопрос</button>
+          </fieldset>
+
+          <fieldset class="card">
+            <legend>Дожим после пробного</legend>
+            <p class="muted small">Кто пришёл на пробный и не купил — через сутки, кто не пришёл — через 2 часа: такие клиенты появляются в карточке «Дожать» на сводке, с готовым сообщением для WhatsApp. Подстановки: {имя}, {центр}, {курс}. Пустое поле — стандартный текст.</p>
+            <label class="field"><span>Пришёл, но не купил</span><textarea class="textarea" name="followUp.came" maxlength="600" rows="3"></textarea></label>
+            <label class="field" style="margin-top: 14px"><span>Не пришёл</span><textarea class="textarea" name="followUp.noshow" maxlength="600" rows="3"></textarea></label>
+            <label class="check-line" style="margin-top: 16px"><input type="checkbox" name="followUp.auto"> Клиентам из WhatsApp бот пишет сам — днём и только если клиент писал за последние 24 часа (правило WhatsApp). Остальных дожимает администратор.</label>
+          </fieldset>
+
+          <fieldset class="card">
+            <legend>Пароль кабинета</legend>
+            <label class="field"><span>Новый пароль (минимум 8 символов)</span><input class="input" name="newPassword" type="password" autocomplete="new-password" minlength="8"></label>
+          </fieldset>
+
+          <div class="save-bar">
+            <span class="save-status" id="saveStatus" role="status"></span>
+            <button class="btn" type="submit" id="saveBtn">Сохранить</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Установка -->
+      <section data-view="install" hidden>
+        <div class="view-head"><h2>Установка</h2></div>
+
+        <div class="card" id="appCard">
+          <h3>Приложение на телефоне и компьютере</h3>
+          <p class="muted">Кабинет можно установить как приложение: иконка на главном экране, открывается в одно касание, новые заявки приходят уведомлениями — даже когда кабинет закрыт.</p>
+          <div id="appInstall"></div>
+          <h4 class="sub-h">Уведомления на этом устройстве</h4>
+          <div id="pushState"></div>
+          <div class="opts" id="pushEvents" hidden>
+            <label class="opt"><input type="checkbox" name="leads" checked> Новые заявки и ответы клиентов (подтвердил, перенёс, отменил)</label>
+            <label class="opt"><input type="checkbox" name="questions" checked> Вопросы, на которые бот не ответил</label>
+            <label class="opt"><input type="checkbox" name="digest" checked> Утренняя сводка в 9:00</label>
+          </div>
+          <div class="row-actions">
+            <button class="btn small" type="button" id="pushOn" hidden>Включить уведомления</button>
+            <button class="btn ghost small" type="button" id="pushTest" hidden>Прислать проверочное</button>
+            <button class="btn ghost small" type="button" id="pushOff" hidden>Выключить на этом устройстве</button>
+          </div>
+          <div id="pushDevices"></div>
+        </div>
+
+        <div class="card">
+          <h3>Уведомления в Telegram</h3>
+          <p class="muted">Каждая заявка сразу приходит администратору в Telegram, статус меняется кнопками прямо под сообщением. Каждое утро в 9:00 — сводка: заявки за ночь и пробные на сегодня.</p>
+          <div id="tgChats"></div>
+          <div class="row-actions">
+            <button class="btn small" type="button" id="tgConnect">Подключить Telegram</button>
+            <a class="muted small" id="tgLink" target="_blank" rel="noopener" hidden></a>
+            <a class="muted small" id="tgGroup" target="_blank" rel="noopener" hidden>Подключить рабочую группу</a>
+          </div>
+          <p class="muted small">Нажмите кнопку, откройте бота и нажмите «Старт». Можно подключить несколько администраторов, а для группы — ссылка «Подключить рабочую группу» появится после нажатия кнопки.</p>
+        </div>
+
+        <div class="card">
+          <h3>WhatsApp</h3>
+          <div id="waStatus"></div>
+        </div>
+
+        <div class="card">
+          <h3>Ссылка на чат</h3>
+          <p class="muted">Для шапки профиля Instagram, автоответа WhatsApp, Telegram и рекламы.</p>
+          <div class="code"><code id="chatLink"></code><button class="btn ghost small" type="button" data-copy="chatLink">Копировать</button></div>
+          <p><a id="chatLinkOpen" target="_blank" rel="noopener">Открыть чат →</a></p>
+        </div>
+
+        <div class="card qr-card">
+          <div>
+            <h3>QR-код для ресепшена и листовок</h3>
+            <p class="muted">Родитель наводит камеру — открывается чат: вопросы и запись на пробный в любое время.</p>
+            <div class="row-actions">
+              <a class="btn small" id="posterLink" target="_blank" rel="noopener">Открыть постер для печати</a>
+              <button class="btn ghost small" type="button" id="qrDownload">Скачать QR (SVG)</button>
+            </div>
+          </div>
+          <div class="qr" id="qrBox" aria-label="QR-код ссылки на чат"></div>
+        </div>
+
+        <div class="card">
+          <h3>Чат на сайте центра</h3>
+          <p class="muted">Вставьте этот код перед закрывающим тегом &lt;/body&gt; на сайте. Справа внизу появится кнопка чата.</p>
+          <div class="code"><code id="snippet"></code><button class="btn ghost small" type="button" data-copy="snippet">Копировать</button></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+  <script src="/assets/qrcode.js" defer></script>
+  <script src="/cabinet/cabinet.js" defer></script>
+  <script src="/assets/nl-badge.js" defer></script>
+</body>
+</html>

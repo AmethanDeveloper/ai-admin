@@ -1,0 +1,22 @@
+{
+  "id": "/cabinet/",
+  "name": "ИИ-администратор",
+  "short_name": "ИИ-админ",
+  "description": "Кабинет учебного центра: заявки, пробные уроки, вопросы родителей",
+  "lang": "ru",
+  "start_url": "/cabinet/?app=1",
+  "scope": "/cabinet/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#FBF7FB",
+  "theme_color": "#FBF7FB",
+  "icons": [
+    { "src": "/cabinet/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/cabinet/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/cabinet/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Заявки", "url": "/cabinet/#leads", "icons": [{ "src": "/cabinet/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Вопросы", "url": "/cabinet/#questions", "icons": [{ "src": "/cabinet/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

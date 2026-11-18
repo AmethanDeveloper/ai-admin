@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Управление сервисом</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="/assets/logo-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/base.css">
+  <style>
+    main { max-width: 820px; margin: 0 auto; padding: 32px 16px 64px; display: grid; gap: 16px; }
+    h1 { margin: 0; font-size: 30px; }
+    .card { background: var(--surface); border-radius: var(--radius); padding: 24px; display: grid; gap: 12px; box-shadow: var(--shadow); min-width: 0; }
+    .card h2 { margin: 0; font-size: 20px; }
+    .card h3 { margin: 6px 0 0; font-size: 16px; }
+    table { display: block; overflow-x: auto; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { text-align: left; padding: 9px 8px; border-top: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--ink-2); font-size: 12.5px; border-top: 0; }
+    .msg { font-size: 14px; font-weight: 600; margin: 0; }
+    .msg.err { color: var(--danger); } .msg.ok { color: var(--ok); }
+    .muted { color: var(--ink-2); font-size: 14px; margin: 0; }
+    .kv { display: grid; grid-template-columns: 170px 1fr; gap: 6px 12px; font-size: 14px; }
+    .kv dt { color: var(--ink-2); }
+    .kv dd { margin: 0; word-break: break-all; }
+    code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; background: var(--surface-2); padding: 2px 6px; border-radius: 6px; }
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .check { display: flex; gap: 8px; align-items: center; font-weight: 600; font-size: 14px; }
+    ol { margin: 0; padding-left: 20px; color: var(--ink-2); font-size: 14px; display: grid; gap: 4px; }
+    .link { background: none; border: 0; color: var(--accent); font-weight: 700; cursor: pointer; padding: 0; }
+    @media (max-width: 600px) { .grid, .kv { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="admin-page">
+  <main>
+    <h1>Управление сервисом</h1>
+    <form class="card" id="keyForm">
+      <label class="field"><span>Ключ администратора сервиса (SUPERADMIN_KEY)</span><input class="input" id="key" type="password" autocomplete="off" required></label>
+      <button class="btn" type="submit">Открыть</button>
+      <p class="msg" id="keyMsg" role="alert"></p>
+    </form>
+
+    <section id="panel" hidden style="display:grid;gap:16px">
+      <div class="card">
+        <h2>Подключения сервиса</h2>
+        <dl class="kv" id="cfg"></dl>
+        <div class="row"><button class="btn ghost small" type="button" id="tgSetup">Подключить вебхук Telegram</button><p class="msg" id="tgMsg"></p></div>
+      </div>
+
+      <div class="card">
+        <h2>Центры</h2>
+        <table><thead><tr><th>Код</th><th>Название</th><th>Заявок</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+      </div>
+
+      <form class="card" id="waForm" hidden>
+        <h2 id="waTitle">WhatsApp центра</h2>
+        <ol>
+          <li>В <a href="https://developers.facebook.com/apps" target="_blank" rel="noopener">Meta for Developers</a> создайте приложение с вариантом «Связаться с клиентами через WhatsApp» и добавьте номер центра.</li>
+          <li>Скопируйте сюда Phone number ID и постоянный токен (системный пользователь в Business Settings с правами whatsapp_business_messaging).</li>
+          <li>В разделе Webhooks приложения укажите адрес и verify token из блока «Подключения сервиса» и подпишитесь на поле <code>messages</code>.</li>
+          <li>App secret приложения (Settings → Basic) — сюда или в переменную WA_APP_SECRET.</li>
+        </ol>
+        <label class="check"><input type="checkbox" name="enabled"> Бот отвечает в WhatsApp</label>
+        <div class="grid">
+          <label class="field"><span>Phone number ID</span><input class="input" name="phoneNumberId" inputmode="numeric" placeholder="1234567890"></label>
+          <label class="field"><span>Номер для показа клиентам</span><input class="input" name="displayPhone" placeholder="+7 700 000 00 00"></label>
+          <label class="field"><span>Access token</span><input class="input" name="accessToken" type="password" autocomplete="off"></label>
+          <label class="field"><span>App secret</span><input class="input" name="appSecret" type="password" autocomplete="off"></label>
+          <label class="field"><span>Шаблон напоминания (необязательно)</span><input class="input" name="reminderTemplate" placeholder="trial_reminder"></label>
+          <label class="field"><span>Язык шаблона</span><input class="input" name="templateLang" placeholder="ru"></label>
+        </div>
+        <p class="muted">Шаблон нужен для напоминаний, если клиент не писал больше суток. Тело шаблона в Meta: «Напоминаем: пробный урок {{1}} в «{{2}}». Адрес: {{3}}.», категория Utility.</p>
+        <div class="row"><button class="btn" type="submit">Сохранить</button><p class="msg" id="waMsg"></p></div>
+        <h3>Проверка</h3>
+        <div class="row">
+          <input class="input" id="testTo" placeholder="Номер получателя, например 77011234567" style="max-width:320px">
+          <button class="btn ghost small" type="button" id="waTest">Отправить шаблон hello_world</button>
+        </div>
+        <p class="msg" id="testMsg"></p>
+        <h3>Telegram администраторов</h3>
+        <div id="tgChats" class="muted"></div>
+        <h3>Приложение с уведомлениями</h3>
+        <div id="pushDevices" class="muted"></div>
+      </form>
+
+      <form class="card" id="createForm">
+        <h2>Новый центр</h2>
+        <p class="muted">После создания войдите в его кабинет с этим паролем и заполните курсы, цены и расписание — или передайте доступ владельцу.</p>
+        <div class="grid">
+          <label class="field"><span>Код (латиница, для ссылки)</span><input class="input" name="slug" required pattern="[a-z0-9][a-z0-9-]{1,39}" placeholder="english-house"></label>
+          <label class="field"><span>Название</span><input class="input" name="name" required maxlength="80" placeholder="English House"></label>
+          <label class="field"><span>Пароль кабинета</span><input class="input" name="password" required minlength="8"></label>
+        </div>
+        <button class="btn" type="submit">Создать центр</button>
+        <p class="msg" id="createMsg" role="status"></p>
+      </form>
+
+      <form class="card" id="pwdForm">
+        <h2>Сбросить пароль центра</h2>
+        <div class="grid">
+          <label class="field"><span>Код центра</span><input class="input" name="slug" required></label>
+          <label class="field"><span>Новый пароль</span><input class="input" name="password" required minlength="8"></label>
+        </div>
+        <button class="btn ghost" type="submit">Сбросить</button>
+        <p class="msg" id="pwdMsg" role="status"></p>
+      </form>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const $ = (s) => document.querySelector(s);
+      const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const note = (el, text, ok) => { el.className = `msg ${ok ? "ok" : "err"}`; el.textContent = text; };
+      let key = "", current = "";
+      try { key = sessionStorage.getItem("aiadm-admin") || ""; } catch {}
+
+      async function api(path, body, method) {
+        const res = await fetch(path, { method: method || (body ? "POST" : "GET"), headers: { "content-type": "application/json", "x-admin-key": key }, body: body ? JSON.stringify(body) : undefined });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || "Ошибка");
+        return data;
+      }
+
+      async function loadConfig() {
+        const c = await api("/api/admin/config");
+        const tgOk = c.telegram.configured && c.telegram.webhook === c.telegram.expected;
+        $("#cfg").innerHTML = `
+          <dt>Telegram-бот</dt><dd>${c.telegram.configured ? `@${esc(c.telegram.username)}` : "не задан TELEGRAM_BOT_TOKEN"}</dd>
+          <dt>Вебхук Telegram</dt><dd>${tgOk ? "подключён" : esc(c.telegram.webhook || "не подключён")}</dd>
+          <dt>Вебхук WhatsApp</dt><dd><code>${esc(c.whatsapp.webhookUrl)}</code></dd>
+          <dt>Verify token</dt><dd>${c.whatsapp.verifyToken ? `<code>${esc(c.whatsapp.verifyToken)}</code>` : "не задан WA_VERIFY_TOKEN"}</dd>
+          <dt>WA_APP_SECRET</dt><dd>${c.whatsapp.appSecretSet ? "задан" : "не задан — укажите App secret у центра"}</dd>
+          <dt>Push в приложение</dt><dd>${c.push?.configured ? "настроен" : "не заданы VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY"}</dd>`;
+        $("#tgSetup").hidden = tgOk || !c.telegram.configured;
+      }
+
+      async function load() {
+        const { centers } = await api("/api/admin/centers");
+        $("#rows").innerHTML = centers.map((c) => `<tr><td><b>${esc(c.slug)}</b></td><td>${esc(c.name)}</td><td>${c.leads}</td><td><a href="/chat/?c=${encodeURIComponent(c.slug)}" target="_blank" rel="noopener">чат</a> · <a href="/cabinet/?c=${encodeURIComponent(c.slug)}" target="_blank" rel="noopener">кабинет</a> · <button type="button" class="link" data-wa="${esc(c.slug)}">WhatsApp и Telegram</button></td></tr>`).join("") || '<tr><td colspan="4">Центров пока нет</td></tr>';
+        $("#keyForm").hidden = true;
+        $("#panel").hidden = false;
+        loadConfig().catch((e) => { $("#cfg").textContent = e.message; });
+      }
+
+      async function openCenter(slug) {
+        const d = await api(`/api/admin/centers/${encodeURIComponent(slug)}`);
+        current = slug;
+        const f = $("#waForm"), w = d.whatsapp || {};
+        $("#waTitle").textContent = `WhatsApp и Telegram — ${d.name}`;
+        f.enabled.checked = !!w.enabled;
+        f.phoneNumberId.value = w.phoneNumberId || "";
+        f.displayPhone.value = w.displayPhone || "";
+        f.accessToken.value = ""; f.accessToken.placeholder = w.accessToken || "не задан";
+        f.appSecret.value = ""; f.appSecret.placeholder = w.appSecret || "не задан";
+        f.reminderTemplate.value = w.reminderTemplate || "";
+        f.templateLang.value = w.templateLang || "ru";
+        $("#pushDevices").innerHTML = d.push?.length ? d.push.map((p) => esc(p.device)).join("<br>") : "Нет устройств. Центр включает уведомления сам: кабинет → «Установка».";
+        $("#tgChats").innerHTML = d.telegram.length ? d.telegram.map((c) => `${esc(c.name)} (id ${esc(String(c.id))})`).join("<br>") : "Не подключены. Центр подключает Telegram сам: кабинет → «Установка».";
+        $("#waMsg").textContent = ""; $("#testMsg").textContent = "";
+        f.hidden = false;
+        f.scrollIntoView({ behavior: "smooth" });
+      }
+
+      $("#rows").addEventListener("click", (e) => { const b = e.target.closest("[data-wa]"); if (b) openCenter(b.dataset.wa).catch((ex) => alert(ex.message)); });
+
+      $("#keyForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        key = $("#key").value.trim();
+        try { await load(); try { sessionStorage.setItem("aiadm-admin", key); } catch {} }
+        catch (ex) { note($("#keyMsg"), ex.message); }
+      });
+
+      $("#tgSetup").addEventListener("click", async () => {
+        try { const r = await api("/api/admin/telegram/setup", {}); note($("#tgMsg"), r.result === "skipped" ? "Не задан TELEGRAM_WEBHOOK_SECRET" : "Вебхук подключён", r.result !== "skipped"); loadConfig(); }
+        catch (ex) { note($("#tgMsg"), ex.message); }
+      });
+
+      $("#waForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const f = e.target;
+        try {
+          await api(`/api/admin/centers/${encodeURIComponent(current)}/whatsapp`, {
+            enabled: f.enabled.checked, phoneNumberId: f.phoneNumberId.value.trim(), displayPhone: f.displayPhone.value.trim(),
+            accessToken: f.accessToken.value.trim(), appSecret: f.appSecret.value.trim(),
+            reminderTemplate: f.reminderTemplate.value.trim(), templateLang: f.templateLang.value.trim(),
+          });
+          note($("#waMsg"), "Сохранено", true);
+          openCenter(current);
+        } catch (ex) { note($("#waMsg"), ex.message); }
+      });
+
+      $("#waTest").addEventListener("click", async () => {
+        try { await api(`/api/admin/centers/${encodeURIComponent(current)}/whatsapp/test`, { to: $("#testTo").value }); note($("#testMsg"), "Отправлено. Проверьте WhatsApp получателя.", true); }
+        catch (ex) { note($("#testMsg"), ex.message); }
+      });
+
+      $("#createForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const f = e.target, m = $("#createMsg");
+        try {
+          await api("/api/admin/centers", { slug: f.slug.value.trim().toLowerCase(), name: f.name.value.trim(), password: f.password.value });
+          note(m, `Центр «${f.name.value.trim()}» создан.`, true); f.reset(); load();
+        } catch (ex) { note(m, ex.message); }
+      });
+
+      $("#pwdForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const f = e.target, m = $("#pwdMsg");
+        try {
+          await api(`/api/admin/centers/${encodeURIComponent(f.slug.value.trim().toLowerCase())}/password`, { password: f.password.value });
+          note(m, "Пароль изменён.", true); f.reset();
+        } catch (ex) { note(m, ex.message); }
+      });
+
+      if (key) load().catch(() => { key = ""; });
+    })();
+  </script>
+</body>
+</html>

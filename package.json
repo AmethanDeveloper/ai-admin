@@ -1,0 +1,22 @@
+{
+  "name": "ai-admin",
+  "private": true,
+  "type": "module",
+  "description": "ИИ-администратор для учебных центров: чат-виджет с записью на пробный урок и кабинет заявок",
+  "scripts": {
+    "dev": "netlify dev",
+    "dev:local": "node --experimental-strip-types scripts/local-dev.mjs",
+    "test": "node scripts/test-e2e.mjs && node scripts/test-sw.cjs"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.4.0",
+    "@netlify/blobs": "^11.1.7",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^6.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
